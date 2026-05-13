@@ -1,0 +1,23 @@
+name: Daily Portfolio Sync
+on:
+  schedule:
+    - cron: '0 0 * * *' # Midnight daily
+  workflow_dispatch: # Allows you to press a button to run it manually
+
+jobs:
+  run-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install requests
+      - name: Run Script
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GA4_MEASUREMENT_ID: ${{ secrets.GA4_MEASUREMENT_ID }}
+          GA4_API_SECRET: ${{ secrets.GA4_API_SECRET }}
+        run: python sync_portfolio.py
